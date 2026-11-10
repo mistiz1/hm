@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>unnamed</title>
+<style>
+  :root{
+    --bg:#0a0a0a;
+    --panel:#111214;
+    --line:#232427;
+    --txt:#ececec;
+    --muted:#7d8087;
+    --acc:#ffd400;
+    --acc2:#ff3d00;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+
+  body{
+    background:var(--bg);
+    color:var(--txt);
+    font-family:"Courier New",ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:16px;
+    line-height:1.65;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background:
+      radial-gradient(900px 520px at 82% -8%, rgba(255,212,0,.10), transparent 62%),
+      radial-gradient(760px 520px at -12% 108%, rgba(255,61,0,.08), transparent 62%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+
+  .hazard{
+    height:12px;
+    background:repeating-linear-gradient(45deg,#ffd400 0 18px,#0a0a0a 18px 36px);
+  }
+
+  .nav{
+    position:sticky; top:0; z-index:50;
+    display:flex; justify-content:space-between; align-items:center; gap:20px;
+    padding:15px 28px;
+    background:rgba(10,10,10,.82);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .logo{
+    font-family:Impact,"Arial Black",sans-serif;
+    letter-spacing:.06em; font-size:1.2rem;
+    color:var(--txt); text-decoration:none; text-transform:uppercase;
+    line-height:1;
+  }
+  .logo span{ color:var(--acc); font-size:.62em; vertical-align:super; }
+  .nav nav{ display:flex; gap:22px; }
+  .nav nav a{
+    color:var(--muted); text-decoration:none;
+    font-size:.74rem; letter-spacing:.12em; text-transform:uppercase;
+    transition:color .2s;
+  }
+  .nav nav a:hover{ color:var(--acc); }
+
+  .hero{
+    position:relative; z-index:1;
+    max-width:1180px; margin:0 auto;
+    padding:clamp(56px,11vw,132px) 28px 76px;
+  }
+  .kicker{
+    color:var(--acc);
+    font-size:.74rem; letter-spacing:.2em; text-transform:uppercase;
+    margin-bottom:26px;
+  }
+  h1{
+    font-family:Impact,"Arial Black",sans-serif;
+    font-size:clamp(3.1rem,15vw,11rem);
+    line-height:.82;
+    letter-spacing:-.02em;
+    text-transform:uppercase;
+    color:#f5f5f5;
+    margin-bottom:30px;
+    text-shadow:
+      2px 2px 0 rgba(255,61,0,.45),
+      -2px -2px 0 rgba(0,224,255,.22);
+  }
+  .lead{
+    max-width:640px;
+    color:#b9bcc2;
+    font-size:clamp(1rem,2vw,1.15rem);
+    margin-bottom:34px;
+  }
+  .cta{ display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{
+    display:inline-block; padding:14px 26px;
+    background:var(--acc); color:#000; text-decoration:none;
+    font-weight:700; letter-spacing:.1em; text-transform:uppercase; font-size:.78rem;
+    border:2px solid var(--acc);
+    transition:all .18s ease;
+  }
+  .btn:hover{ background:transparent; color:var(--acc); transform:translateY(-2px); }
+  .btn.ghost{ background:transparent; color:var(--txt); border-color:#333; }
+  .btn.ghost:hover{ border-color:var(--acc); color:var(--acc); }
+
+
+  .marquee{
+    position:relative; z-index:1;
+    overflow:hidden;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    background:#0d0e10;
+    padding:12px 0;
+  }
+  .marquee-track{
+    display:flex;
+    width:max-content;
+    white-space:nowrap;
+    animation:mq 30s linear infinite;
+    font-size:.74rem;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .marquee-track span{ margin-right:36px; }
+  .marquee-track .dot{ color:var(--acc2); }
+  @keyframes mq{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-50%); }
+  }
+
+
+  .section{
+    position:relative; z-index:1;
+    max-width:1180px; margin:0 auto;
+    padding:clamp(52px,9vw,108px) 28px;
+  }
+  h2{
+    font-family:Impact,"Arial Black",sans-serif;
+    font-size:clamp(1.8rem,5vw,3.1rem);
+    text-transform:uppercase;
+    letter-spacing:.02em;
+    line-height:1;
+    margin-bottom:36px;
+    display:flex; align-items:baseline; gap:18px;
+  }
+  h2 span{
+    font-family:"Courier New",monospace;
+    font-size:.4em;
+    color:var(--acc);
+    letter-spacing:.12em;
+  }
+
+  .grid-2{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:20px;
+  }
+
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    padding:28px;
+    position:relative;
+    transition:border-color .25s, transform .25s;
+  }
+  .card::before{
+    content:"";
+    position:absolute; top:-1px; left:-1px;
+    width:12px; height:12px;
+    background:var(--acc);
+  }
+  .card:hover{ border-color:#3a3c40; transform:translateY(-4px); }
+  .card h3{
+    font-size:.78rem; text-transform:uppercase; letter-spacing:.16em;
+    color:var(--acc); margin-bottom:14px; font-weight:700;
+  }
+  .card p{ color:#b9bcc2; font-size:.94rem; }
+
+
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:20px;
+  }
+  .stat{
+    border:1px solid var(--line);
+    background:linear-gradient(180deg,#111214,#0c0d0e);
+    padding:26px;
+    position:relative;
+    overflow:hidden;
+  }
+  .stat::after{
+    content:"";
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(45deg,rgba(255,212,0,.07) 0 8px,transparent 8px 16px);
+    opacity:0; transition:opacity .3s; pointer-events:none;
+  }
+  .stat:hover::after{ opacity:1; }
+  .num{
+    font-family:Impact,"Arial Black",sans-serif;
+    font-size:clamp(2.2rem,6vw,3.4rem);
+    line-height:1;
+    color:var(--acc);
+    letter-spacing:-.01em;
+  }
+  .num sup{ font-size:.4em; vertical-align:super; }
+  .stat.neg .num{ color:var(--acc2); }
+  .label{
+    margin-top:10px;
+    font-size:.7rem; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--muted);
+  }
+
+  .faq{ display:grid; gap:16px; }
+  .qa{
+    border:1px solid var(--line);
+    background:var(--panel);
+    padding:24px 26px;
+    transition:border-color .25s;
+  }
+  .qa:hover{ border-color:#3a3c40; }
+  .qa .q{
+    color:var(--acc);
+    font-weight:700;
+    font-size:.95rem;
+    margin-bottom:10px;
+  }
+  .qa .q::before{ content:"? "; color:var(--muted); font-weight:400; }
+  .qa .a{ color:#b9bcc2; font-size:.94rem; }
+
+
+  .elephant{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:34px;
+    align-items:center;
+    border:1px solid var(--line);
+    background:var(--panel);
+    padding:32px;
+  }
+  .elephant svg{ width:120px; height:auto; display:block; }
+  .elephant h3{
+    font-size:.78rem; text-transform:uppercase; letter-spacing:.16em;
+    color:var(--acc); margin-bottom:12px;
+  }
+  .elephant p{ color:#b9bcc2; font-size:.94rem; }
+
+
+  .reveal{
+    opacity:0;
+    transform:translateY(24px);
+    transition:opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1);
+  }
+  .reveal.in{ opacity:1; transform:none; }
+
+
+  footer{
+    position:relative; z-index:1;
+    border-top:1px solid var(--line);
+    padding:44px 28px 64px;
+    text-align:center;
+    color:var(--muted);
+    font-size:.76rem;
+    letter-spacing:.08em;
+  }
+  footer .fine{
+    margin-top:14px;
+    font-size:.68rem;
+    color:#4d4f54;
+  }
+
+
+  @media (max-width:720px){
+    .nav nav{ display:none; }
+    .elephant{ grid-template-columns:1fr; gap:22px; text-align:left; }
+    .elephant svg{ width:88px; }
+    h2{ flex-direction:column; gap:8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hazard"></div>
+
+<header class="nav">
+  <a class="logo" href="#">шляповод<span>™</span></a>
+  <nav>
+    <a href="#about">о профессии</a>
+    <a href="#money">доход</a>
+    <a href="#faq">вопросы</a>
+  </nav>
+</header>
+
+<main>
+
+
+  <section class="hero">
+    <h1>шляповод</h1>
+    <p class="lead">
+      всем доброго времени суток, я являюсь шляповодом на заводах, фабриках
+      по производству банок с газированными напитками
+    </p>
+    <div class="cta">
+      <a href="#faq" class="btn">Задать вопрос</a>
+      <a href="#money" class="btn ghost">смотреть доход</a>
+    </div>
+  </section>
+  <div class="marquee">
+    <div class="marquee-track">
+      <span>снять головной убор нельзя!!!</span>
+      <span class="dot">✦</span>
+      <span>фимоз 15 степени</span>
+      <span class="dot">✦</span>
+      <span>головастик как слон из шахмат</span>
+      <span class="dot">✦</span>
+      <span>прибыль −500 ₽ за смену</span>
+      <span class="dot">✦</span>
+      <span>банки с газированными напитками</span>
+      <span class="dot">✦</span>
+
+      <span>снять головной убор нельзя!</span>
+      <span class="dot">✦</span>
+      <span>фимоз 15 степени</span>
+      <span class="dot">✦</span>
+      <span>головастик как слон из шахмат</span>
+      <span class="dot">✦</span>
+      <span>прибыль −500 ₽ за смену</span>
+      <span class="dot">✦</span>
+      <span>банки с газированными напитками</span>
+      <span class="dot">✦</span>
+    </div>
+  </div>
+  <section id="about" class="section">
+    <h2 class="reveal"><span>01</span> О профессии</h2>
+    <div class="grid-2">
+      <div class="card reveal">
+        <h3>чем же я занимаюсь?</h3>
+        <p>
+          вожу половым органом по банкам с газированными напитками на заводах
+          и фабриках
+        </p>
+      </div>
+      <div class="card reveal">
+        <h3>почему это выглядит странно</h3>
+        <p>
+          а почему у тебя машина на аве а едешь ты на маршруткэ
+        </p>
+      </div>
+      <div class="card reveal">
+        <h3>требования</h3>
+        <p>
+          опыт не требуется, работаю по 15 часов в сутки, сплю буквально в том же заводе
+        </p>
+      </div>
+      <div class="card reveal">
+        <h3>отношения</h3>
+        <p>
+         вас ненавидят работники, но ничего страшного, вы сможете это пережить (наверное)
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ДОХОД -->
+  <section id="money" class="section">
+    <h2 class="reveal"><span>02</span> доход:</h2>
+    <div class="stats">
+      <div class="stat neg reveal">
+        <div class="num" data-count="3859" data-suffix=" ₽">0 ₽</div>
+        <div class="label">прибыль за смену</div>
+      </div>
+      <div class="stat reveal">
+        <div class="num">XV<sup>ст.</sup></div>
+        <div class="label">степень фимоза</div>
+      </div>
+      </div>
+      <div class="stat reveal">
+        <div class="num">200+</div>
+        <div class="label">банок в сутки</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section">
+    <h2 class="reveal"><span>03</span> частые вопросы</h2>
+    <div class="faq">
+      <div class="qa reveal">
+        <div class="q">почему вы водите половым органом по банкам?</div>
+        <div class="a">
+          понимаю ваши претензии, но это дает банкам свой уникальный вкус
+        </div>
+      </div>
+      <div class="qa reveal">
+        <div class="q">а почему вы вообще в головном уборе в помещении?</div>
+        <div class="a">
+          из за фимоза XV степени
+        </div>
+      </div>
+      <div class="qa reveal">
+        <div class="q">как вы смогли получить такую должность?</div>
+        <div class="a">
+          началось все с рюриков...
+        </div>
+      </div>
+      <div class="qa reveal">
+        <div class="q">Как это выглядит?</div>
+        <div class="a">
+          мой головастик выглядит как слон из шахмат
+        </div>
+      </div>
+      <div class="qa reveal">
+        <div class="q">сколько вы зарабатываете???</div>
+        <div class="a">
+          -500$ за смену, это был мой лучший результат, в основном я зарабатываю -500 рублей
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+        </g>
+      </svg>
+      <div>
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  </div>
+</footer>
+
+<script>
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+
+  function animateCount(el) {
+    const target = parseFloat(el.dataset.count);
+    const suffix = el.dataset.suffix || '';
+    const duration = 1600;
+    const start = performance.now();
+
+    function frame(now) {
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const value = Math.round(target * eased);
+      el.textContent = (value > 0 ? '+' : '') + value + suffix;
+      if (p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        animateCount(e.target);
+        counterObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.6 });
+
+  document.querySelectorAll('[data-count]').forEach((el) => counterObserver.observe(el));
+</script>
+
+</body>
+</html>
